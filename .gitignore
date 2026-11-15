@@ -4,3 +4,4 @@ tools/check*.png
 .DS_Store
 Thumbs.db
 shots/
+tools/probe.out
