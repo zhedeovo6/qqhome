@@ -1,11 +1,12 @@
-/* 录抖音演示视频：真实点击操作，输出 webm，再转 mp4
+/* 录抖音演示视频：在发布域名上真实操作（含云端功能），输出 webm 再转 mp4
    运行：NODE_PATH="$(npm root -g)/@playwright/cli/node_modules" node tools/record.js */
 'use strict';
 
 var path = require('path');
 var pw = require('playwright');
 
-var SITE = 'file:///' + path.resolve(__dirname, '..').replace(/\\/g, '/') + '/index.html';
+var SITE = process.argv[2] ||
+  'https://wbapp-pinyljbkapt2d3t8d9a8df.app.workbuddy.host/?sharecode=MJJACWNKR6';
 
 function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 
@@ -13,6 +14,7 @@ function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
   var t = Date.now();
   var mk = function (k, ago) { return { k: k, t0: t - ago * 1000, w: false }; };
 
+  /* 预置一份有熟花可收的存档，录出来画面更满 */
   var state = {
     nick: '家园小Q', lv: 12, exp: 860, gb: 320, energy: 100,
     energyAt: t, regAt: t, onlineAt: t, signAt: 0, workAt: 0,
@@ -43,48 +45,34 @@ function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
     try { localStorage.setItem('qqhome_pixel_v1', s); } catch (e) {}
   }, JSON.stringify(state));
 
-  await page.goto(SITE);
-  await sleep(900);
+  await page.goto(SITE, { waitUntil: 'domcontentloaded', timeout: 45000 });
+  await sleep(3200);   /* 等云连上、热帖顶上来 */
 
-  /* 花园：收三块熟地 */
-  await page.locator('#page a:has-text("魔法花园")').first().click();
-  await sleep(800);
-  for (var i = 0; i < 3; i++) {
-    var btn = page.locator('a.btn:has-text("收")').first();
-    if (await btn.count()) { await btn.click(); await sleep(700); }
-  }
-  await page.locator('#bar a:has-text("返回")').first().click();
-  await sleep(700);
+  /* 全服排行：等级榜 */
+  await page.locator('#page a:has-text("全服排行")').first().click();
+  await sleep(3000);
 
-  /* 牧场：偷一把菜 */
-  await page.locator('#page a:has-text("阳光牧场")').first().click();
-  await sleep(700);
-  await page.locator('a:has-text("去好友地里偷菜")').first().click();
-  await sleep(800);
-  await page.locator('#bar a:has-text("返回")').first().click();
-  await sleep(700);
+  /* 切比武榜 */
+  await page.locator('a:has-text("比武榜")').first().click();
+  await sleep(2200);
 
-  /* 精武堂：比武，看战报 */
-  await page.locator('#page a:has-text("精武堂")').first().click();
-  await sleep(700);
-  await page.locator('a:has-text("找人比武")').first().click();
-  await sleep(900);
-  await page.evaluate(function () { window.scrollTo(0, document.body.scrollHeight); });
-  await sleep(1800);
-  await page.evaluate(function () { window.scrollTo(0, 0); });
-  await sleep(400);
-  await page.locator('#bar a:has-text("返回")').first().click();
-  await sleep(700);
+  /* 去偷菜 */
+  await page.locator('a:has-text("去偷菜")').first().click();
+  await sleep(3000);
 
-  /* 论坛：看一篇帖子 */
-  await page.locator('#page a:has-text("家园论坛")').first().click();
-  await sleep(700);
-  await page.locator('#page a:has-text("精武堂")').first().click();
-  await sleep(1200);
+  /* 偷一朵 */
+  var btn = page.locator('a.btn:has-text("偷一朵")').first();
+  if (await btn.count()) { await btn.click(); await sleep(2400); }
+
+  /* 论坛看帖 */
+  await page.locator('#foot a:has-text("论坛")').first().click();
+  await sleep(2000);
+  await page.locator('#page a:has-text("有没有人跟我一样")').first().click();
+  await sleep(2600);
 
   /* 回首页收尾 */
   await page.locator('#bar a:has-text("返回")').first().click();
-  await sleep(1200);
+  await sleep(1800);
 
   await ctx.close();
   await browser.close();

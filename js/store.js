@@ -36,9 +36,16 @@
   /* 升级所需经验 */
   function need(lv) { return 300 + lv * 90; }
 
+  /* 本机存档码：云存档、排行榜、偷菜记录都挂在这个 key 上 */
+  function newKey() {
+    return 'qk' + Math.random().toString(36).slice(2, 10) +
+      Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+  }
+
   function fresh() {
     var t = Date.now();
     return {
+      key: newKey(),
       nick: '家园小Q',
       lv: 12,
       exp: 860,
@@ -56,33 +63,59 @@
         ranch:  { plots: [null, null, null, null, null, null], seeds: { cabbage: 2 }, stealAt: 0 },
         kf:     { lv: 9, hp: 328, atk: 46, def: 30, qi: 120, exp: 180, wins: 0, loses: 0, trainAt: 0, log: '' },
         family: { lv: 7, contrib: 320, signAt: 0 },
-        bbs:    { posts: JSON.parse(JSON.stringify(QH.DATA.POSTS)) }
+        /* 论坛已经搬到云端，本地只留个人的发帖计数，帖子本体在 qh_post 表 */
+        bbs:    { posted: 0, replied: 0 }
       }
     };
   }
 
   var s = null;
+  var hadSave = false;   // 本机是不是本来就有档（决定启动时要不要去云端拉）
+
+  function normalize() {
+    /* 旧档缺板块就补，不整体重置（存档迁移） */
+    var f = fresh();
+    if (!s.key) s.key = f.key;
+    if (!s.d.garden) s.d.garden = f.d.garden;
+    if (!s.d.ranch) s.d.ranch = f.d.ranch;
+    if (!s.d.kf) s.d.kf = f.d.kf;
+    if (!s.d.family) s.d.family = f.d.family;
+    if (!s.d.bbs) s.d.bbs = f.d.bbs;
+    return s;
+  }
 
   function load() {
     try {
       var raw = LS.getItem(KEY);
-      if (raw) s = JSON.parse(raw);
+      if (raw) { s = JSON.parse(raw); hadSave = true; }
     } catch (e) { s = null; }
-    if (!s || !s.d) s = fresh();
-    /* 旧档缺板块就补，不整体重置（存档迁移） */
-    if (!s.d.garden) s.d.garden = fresh().d.garden;
-    if (!s.d.ranch) s.d.ranch = fresh().d.ranch;
-    if (!s.d.kf) s.d.kf = fresh().d.kf;
-    if (!s.d.family) s.d.family = fresh().d.family;
-    if (!s.d.bbs || !s.d.bbs.posts || !s.d.bbs.posts.length) s.d.bbs = { posts: JSON.parse(JSON.stringify(QH.DATA.POSTS)) };
+    if (!s || !s.d) { s = fresh(); hadSave = false; }
+    normalize();
     return s;
   }
   function get() { if (!s) load(); return s; }
   function save() {
     s = get();
     try { LS.setItem(KEY, JSON.stringify(s)); } catch (e) {}
+    if (QH.C && QH.C.touchSave) QH.C.touchSave();
   }
-  function reset() { s = fresh(); save(); }
+  function reset() { s = fresh(); hadSave = false; save(); }
+
+  function isFirstRun() { return !hadSave; }
+
+  /* 云端存档回灌本机（只在首次打开这台设备时用） */
+  function adopt(saved) {
+    if (!saved || !saved.d) return false;
+    var keep = (s && s.key) || newKey();
+    s = saved;
+    if (!s.key) s.key = keep;
+    s.flow = s.flow || 0;
+    if (!s.speed) s.speed = false;
+    hadSave = true;
+    normalize();
+    try { LS.setItem(KEY, JSON.stringify(s)); } catch (e) {}
+    return true;
+  }
 
   /* 体力按分钟恢复，在线时长按登录时间算 */
   function tick() {
@@ -152,6 +185,7 @@
     get: get, save: save, load: load, reset: reset, tick: tick,
     addGB: addGB, addExp: addExp, spendGB: spendGB, need: need,
     signedToday: signedToday, signIn: signIn, work: work,
+    isFirstRun: isFirstRun, adopt: adopt, newKey: newKey,
     pad: pad, dkey: dkey, stamp: stamp
   };
 })();
