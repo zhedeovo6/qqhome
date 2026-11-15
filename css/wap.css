@@ -1,0 +1,179 @@
+/* QQ家园 WAP 复刻 · 取色来自 3GQQ 家园社区样式表
+   链接 #004299 / 标题条 #4c95e7 / 模块线 #9FC6EC / 提示 #FFF9B7 / 页脚 #E3EEF8
+   全部直角，无阴影，无渐变，1px 实线，宋体 12px */
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { -webkit-text-size-adjust:100%; }
+
+body{
+  font:12px/1.55 "宋体",SimSun,Tahoma,sans-serif;
+  color:#000;
+  background:#d6d6d6;
+  display:flex;
+  justify-content:center;
+  min-height:100vh;
+  min-height:100dvh;
+  -webkit-tap-highlight-color:transparent;
+  overscroll-behavior-y:none;
+}
+
+#app{
+  width:100%;
+  max-width:320px;
+  min-height:100vh;
+  min-height:100dvh;
+  background:#fff;
+  border-left:1px solid #8d8d8d;
+  border-right:1px solid #8d8d8d;
+  display:flex;
+  flex-direction:column;
+}
+
+#page{ flex:1; }
+
+/* 小屏去掉两侧边线，贴满 */
+@media (max-width:340px){
+  #app{ border-left:none; border-right:none; }
+}
+
+a{ color:#004299; text-decoration:none; cursor:pointer; }
+b{ font-weight:700; }
+
+/* ---- 顶部标题条 ---- */
+.bar{
+  flex:none;
+  height:24px;
+  line-height:24px;
+  padding:0 5px;
+  background:#4c95e7;
+  border-bottom:1px solid #2f6cb3;
+  color:#fff;
+  display:flex;
+  align-items:center;
+}
+.bar a{ color:#fff; font:12px "宋体"; font-weight:400; }
+.bar .t{ flex:1; text-align:center; font-weight:700; letter-spacing:1px; }
+.bar .r{ font:11px "宋体"; color:#cfe3fb; }
+
+/* ---- 模块标题 【】 ---- */
+.mt{
+  margin:7px 0 0;
+  padding:4px 5px 2px;
+  border-bottom:4px solid #9fc6ec;
+  font-weight:700;
+}
+.mt a{ font-weight:400; }
+.mt .em{ font-weight:400; }
+
+/* ---- 行 ---- */
+.p{ padding:3px 5px; line-height:1.6; }
+.p2{ padding:1px 5px; line-height:1.6; }
+.em{ color:#9b9b9b; font-size:11px; }
+.gb{ color:#c47400; }
+.red{ color:#c00; }
+.hr{ height:1px; background:#e3e6eb; margin:3px 5px; }
+
+/* ---- 黄色提示条（未读、任务、公告） ---- */
+.tip{
+  background:#fff9b7;
+  border-bottom:1px solid #e6d68a;
+  padding:3px 5px;
+  line-height:1.6;
+}
+.tip b{ color:#a33; }
+
+/* ---- 灰底信息块 ---- */
+.box{ background:#e3eef8; border-top:1px solid #9fc6ec; border-bottom:1px solid #9fc6ec; padding:3px 5px; line-height:1.7; }
+.flat{ background:#f0f0f0; padding:3px 5px; line-height:1.6; }
+
+/* ---- 按钮（2009 表单按钮） ---- */
+.btn{
+  display:inline-block;
+  border:1px solid #7f9db9;
+  background:#f2f2f2;
+  color:#000;
+  font:12px "宋体";
+  line-height:17px;
+  padding:0 5px;
+  cursor:pointer;
+  text-decoration:none;
+  vertical-align:1px;
+}
+.btn:active{ background:#dcdcdc; }
+.btn.off{ color:#999; border-color:#c9c9c9; background:#f7f7f7; cursor:default; }
+.btn.s{ padding:0 3px; }
+
+/* ---- 九宫格 / 花圃 表格 ---- */
+table.g{ border-collapse:collapse; width:100%; table-layout:fixed; }
+table.g td{
+  border:1px solid #b7c9d8;
+  height:56px;
+  text-align:center;
+  vertical-align:middle;
+  font-size:11px;
+  line-height:1.45;
+  padding:1px;
+}
+table.l{ border-collapse:collapse; width:100%; }
+table.l td{ padding:8px 2px; text-align:center; font-size:11px; border-bottom:1px solid #e8edf2; }
+
+/* ---- 页脚 ---- */
+.foot{
+  flex:none;
+  position:sticky;
+  bottom:0;
+  z-index:2;
+  background:#e3eef8;
+  border-top:1px solid #9fc6ec;
+  padding:4px 3px calc(4px + env(safe-area-inset-bottom));
+  text-align:center;
+  color:#515151;
+  font-size:11px;
+  line-height:1.9;
+}
+.foot a{ color:#0051a4; margin:0 1px; }
+
+/* ---- 像素图标 ---- */
+.px{ vertical-align:-2px; image-rendering:pixelated; }
+body.speed .px{ display:none; }
+
+/* ---- 表单 ---- */
+input,textarea,select{
+  font:12px "宋体";
+  border:1px solid #7f9db9;
+  background:#fff;
+  color:#000;
+}
+input[type=text]{ width:100%; padding:1px 2px; height:18px; }
+textarea{ width:100%; padding:2px; height:56px; resize:none; }
+.btnrow{ padding:4px 5px; }
+
+/* ---- 进度条（纯文本方块） ---- */
+.prog{ letter-spacing:-1px; font-family:"宋体"; }
+.prog i{ font-style:normal; color:#2f8f2f; }
+.prog s{ text-decoration:none; color:#c9c9c9; }
+
+/* ---- 帖子正文 ---- */
+.body{
+  white-space:pre-wrap;
+  word-break:break-all;
+  padding:4px 5px;
+  line-height:1.75;
+}
+
+/* ---- 战斗文字 ---- */
+.log{
+  white-space:pre-wrap;
+  word-break:break-all;
+  padding:4px 5px;
+  line-height:1.65;
+  border-top:1px solid #e3e6eb;
+  border-bottom:1px solid #e3e6eb;
+  background:#fcfcfc;
+}
+
+/* 分页 */
+.pager{ text-align:center; padding:5px 0; color:#666; }
+
+/* 选中态 */
+.cur{ color:#c00; font-weight:700; }

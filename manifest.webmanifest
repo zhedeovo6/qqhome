@@ -1,0 +1,26 @@
+{
+  "name": "QQ家园 · 像素复刻",
+  "short_name": "QQ家园",
+  "description": "2008 年那个 WAP 社区",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#d6d6d6",
+  "theme_color": "#4c95e7",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

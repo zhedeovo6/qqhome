@@ -1,0 +1,6 @@
+tools/vid/
+tools/check*.png
+*.webm
+.DS_Store
+Thumbs.db
+shots/
